@@ -1,13 +1,22 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import "./scss/volt.scss";
+import "react-datetime/css/react-datetime.css";
+import { Chart, registerables } from "chart.js";
+import { Provider } from "react-redux";
+import store from "./ReduxToolkit/store";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+Chart.register(...registerables);
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </React.StrictMode>
 );
 
