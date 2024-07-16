@@ -57,7 +57,9 @@ export const Navbar = () => {
           <DrawerBody>
             <VStack spacing={4} align="stretch">
               <Link as={RouterLink} to="/" onClick={onClose}>Home</Link>
-              <Link as={RouterLink} to="/overview" onClick={onClose}>Overview</Link>
+              {user && (
+                <Link as={RouterLink} to="/overview" onClick={onClose}>Overview</Link>
+              )}
               {!user && isMobile && (
                 <HStack spacing={4}>
                   <Button as={RouterLink} to="/login" onClick={onClose} flex="1">Login</Button>
