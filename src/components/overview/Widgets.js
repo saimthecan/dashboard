@@ -7,10 +7,7 @@ import { useSelector } from "react-redux";
 
 export const CircleChartWidget = (props) => {
   const [products, setProducts] = useState([]);
-  const username = useSelector((state) => state.user);
-  console.log("widgetname", username);
   const token = useSelector((state) => state.user.token);
-  console.log("widget", token);
 
   useEffect(() => {
     const fetchUserProducts = async () => {
@@ -20,43 +17,35 @@ export const CircleChartWidget = (props) => {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log("widgetdata", response.data);
         setProducts(response.data);
       } catch (error) {
         console.error("Error fetching user products:", error);
       }
     };
-
     fetchUserProducts();
   }, [token]);
+
+  // Ürün isimlerine göre renkler tanımlayın
+  const colors = ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#F7464A", "#49A9EA", "#BDC3C7"];
 
   const data = {
     labels: products.map((product) => product.name),
     datasets: [
       {
         data: products.map((product) => product.price),
-        backgroundColor: [
-          "#FF6384",
-          "#36A2EB",
-          "#FFCE56",
-          "#4BC0C0",
-          "#F7464A",
-          "#49A9EA",
-          "#BDC3C7",
-        ], // Renklerinizi burada ayarlayabilirsiniz
+        backgroundColor: colors.slice(0, products.length),
       },
     ],
   };
 
   const options = {
+    responsive: true,
     plugins: {
       legend: {
-        display: false, // Bu satır etiketleri gizler
+        display: false,
       },
     },
   };
-
-  const { title = [] } = props;
 
   return (
     <Card border="light" className="shadow-sm">
@@ -70,12 +59,14 @@ export const CircleChartWidget = (props) => {
             <Pie data={data} options={options} />
           </Col>
           <Col xs={12} xl={7} className="px-xl-0">
-            <h5 className="mb-3">{title}</h5>
-            {products.map((product, index) => (
-              <h6 key={index} className="fw-normal text-gray">
-                {product.name} - ${product.price}
-              </h6>
-            ))}
+            <div>
+              {products.map((product, index) => (
+                <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '0.5rem' }}>
+                  <span style={{ height: '15px', width: '15px', backgroundColor: colors[index], borderRadius: '50%', marginRight: '10px' }}></span>
+                  {product.name} 
+                </div>
+              ))}
+            </div>
           </Col>
         </Row>
       </Card.Body>
@@ -100,24 +91,17 @@ export const CircleChartWidgetPhone = (props) => {
         console.error("Error fetching user products:", error);
       }
     };
-
     fetchUserProducts();
   }, [token]);
+
+  const colors = ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#F7464A", "#49A9EA", "#BDC3C7"];
 
   const data = {
     labels: products.map((product) => product.name),
     datasets: [
       {
         data: products.map((product) => product.price),
-        backgroundColor: [
-          "#FF6384",
-          "#36A2EB",
-          "#FFCE56",
-          "#4BC0C0",
-          "#F7464A",
-          "#49A9EA",
-          "#BDC3C7",
-        ],
+        backgroundColor: colors.slice(0, products.length),
       },
     ],
   };
@@ -132,8 +116,6 @@ export const CircleChartWidgetPhone = (props) => {
     },
   };
 
-  const { title = [] } = props;
-
   return (
     <Card border="light" className="shadow-sm">
       <Card.Body>
@@ -147,13 +129,12 @@ export const CircleChartWidgetPhone = (props) => {
             <Pie data={data} options={options} />
           </Col>
           <Col xs={12} xl={7} className="px-xl-0">
-            <h5 className="mb-3" style={{ fontSize: '1rem' }}>{title}</h5>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center' }}>
+         
+            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
               {products.map((product, index) => (
-                <div key={index} style={{ display: 'flex', alignItems: 'center', fontSize: '0.85rem' }}>
-                 <span className="dot" style={{ height: '5px', width: '5px', backgroundColor: '#000', borderRadius: '50%', marginRight: '3px' }}></span>
-
-                  {product.name} - ${product.price}
+                <div key={index} style={{ display: 'flex', alignItems: 'center', marginRight: '10px' }}>
+                  <span style={{ height: '15px', width: '15px', backgroundColor: colors[index], borderRadius: '50%', marginRight: '5px' }}></span>
+                  {product.name} 
                 </div>
               ))}
             </div>
@@ -164,7 +145,7 @@ export const CircleChartWidgetPhone = (props) => {
   );
 };
 
-export default CircleChartWidgetPhone;
+
 
 export const SalesValueWidget = (props) => {
   const [products, setProducts] = useState([]);
