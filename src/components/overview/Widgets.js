@@ -184,7 +184,7 @@ export const SalesValueWidget = (props) => {
           (sum, product) => sum + Number(product.price),
           0
         );
-        setTotal(totalValue); 
+        setTotal(totalValue);
       } catch (error) {
         console.error("Error fetching user products:", error);
       }
@@ -197,11 +197,12 @@ export const SalesValueWidget = (props) => {
     labels: products.map((product) => product.name),
     datasets: [
       {
-        label: "Product Prices",
+        label: "Product Price",
         data: products.map((product) => product.price),
-        backgroundColor: "#4bc0c0",
-        borderColor: "#4bc0c0",
+        backgroundColor: products.map((product) => product.color || "#4bc0c0"),
+        borderColor: products.map((product) => product.color || "#4bc0c0"),
         borderWidth: 1,
+        barThickness: 50, // Min bar thickness
       },
     ],
   };
@@ -210,14 +211,13 @@ export const SalesValueWidget = (props) => {
     scales: {
       y: {
         beginAtZero: true,
-        grid: {
-          color: "#e9ecef",
-        },
+        ticks: {
+          stepSize: 500 // Bu değeri gerektiği gibi ayarlayabilirsiniz
+        }
       },
       x: {
-        grid: {
-          color: "#e9ecef",
-        },
+        categoryPercentage: 1.0, // Bu değeri artırarak kategoriler arasındaki boşluğu azaltabilirsiniz
+        barPercentage: 0.9, // Bu değeri azaltarak her bir barın genişliğini azaltabilirsiniz
       },
     },
     plugins: {
@@ -230,6 +230,7 @@ export const SalesValueWidget = (props) => {
       },
     },
   };
+  
 
   return (
     <Card
@@ -282,11 +283,12 @@ export const SalesValueWidgetPhone = (props) => {
     labels: products.map((product) => product.name),
     datasets: [
       {
-        label: "Product Prices",
+        label: "Product Price",
         data: products.map((product) => product.price),
         backgroundColor: "#4bc0c0",
         borderColor: "#4bc0c0",
         borderWidth: 1,
+        barThickness: 25,
       },
     ],
   };
@@ -300,7 +302,7 @@ export const SalesValueWidgetPhone = (props) => {
   };
 
   return (
-    <Card className="bg-secondary-alt shadow-sm">
+    <Card className="shadow-sm" style={{ backgroundColor: '#f8f9fa', borderRadius: '10px' }}>
       <Card.Header className="d-md-flex flex-row align-items-center flex-0">
         <div className="d-block mb-3 mb-md-0">
           <h5 className="fw-normal mb-2">Total Sales Value</h5>

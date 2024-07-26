@@ -72,6 +72,9 @@ export const Navbar = () => {
               {user && (
                 <Link as={RouterLink} to="/overview" onClick={onClose}>Overview</Link>
               )}
+                {user && (
+                <Link as={RouterLink} to="/products" onClick={onClose}>Products</Link>
+              )}
               {isAdmin && (
                 <Link as={RouterLink} to="/adminoverview" onClick={onClose}>Admin Overview</Link>
               )}
