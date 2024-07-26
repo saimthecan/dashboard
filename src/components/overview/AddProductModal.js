@@ -2,16 +2,21 @@ import React, { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 
 const AddProductModal = ({ show, handleClose, handleSubmit }) => {
-  const [product, setProduct] = useState({ name: '', price: '', description: '' });
+  const [product, setProduct] = useState({ name: '', description: '', price: '' });
 
   const handleChange = (e) => {
     setProduct({ ...product, [e.target.name]: e.target.value });
   };
 
   const submitForm = () => {
-    handleSubmit(product);
+    const processedProduct = {
+      ...product,
+      price: parseFloat(product.price)  // price'ı float'a çevir
+    };
+    handleSubmit(processedProduct);
     handleClose();
   };
+  
 
   return (
     <Modal show={show} onHide={handleClose}>
@@ -26,7 +31,14 @@ const AddProductModal = ({ show, handleClose, handleSubmit }) => {
           </Form.Group>
           <Form.Group>
             <Form.Label>Price</Form.Label>
-            <Form.Control type="number" name="price" value={product.price} onChange={handleChange} />
+            <Form.Control 
+              type="number" 
+              name="price" 
+              value={product.price} 
+              onChange={handleChange} 
+              inputMode="numeric" 
+              pattern="[0-9]*"
+            />
           </Form.Group>
           <Form.Group>
             <Form.Label>Description</Form.Label>

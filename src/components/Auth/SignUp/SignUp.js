@@ -25,7 +25,7 @@ export const Signup = () => {
     };
 
     try {
-      const response = await axios.post('http://localhost:5000/signup', user);
+      const response = await axios.post('http://localhost:8000/signup', user);
       console.log(response.data);
       navigate('/login');
     } catch (error) {

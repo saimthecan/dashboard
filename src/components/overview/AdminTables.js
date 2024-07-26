@@ -3,14 +3,14 @@ import { Col, Row, Card, Table } from "@themesberg/react-bootstrap";
 import axios from "axios";
 import { useSelector } from "react-redux";
 
-export const PageVisitsTable = () => {
+export const AdminTables = () => {
   const [products, setProducts] = useState([]);
   const token = useSelector((state) => state.user.token);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:5000/myproducts", {
+        const response = await axios.get("http://127.0.0.1:5000/products", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -28,7 +28,7 @@ export const PageVisitsTable = () => {
     const { name, description, price, owner } = props;
 
     return (
-      <tr style={{ transition: "background-color 0.3s", cursor: "pointer" }}>
+      <tr>
         <th scope="row">{name}</th>
         <td>{description}</td>
         <td>${price}</td>
@@ -38,11 +38,7 @@ export const PageVisitsTable = () => {
   };
 
   return (
-    <Card
-      border="light"
-      className="shadow-sm"
-      style={{ borderRadius: "10px", backgroundColor: "#f8f9fa" }}
-    >
+    <Card border="light" className="shadow-sm">
       <Card.Header>
         <Row className="align-items-center">
           <Col>
@@ -50,12 +46,8 @@ export const PageVisitsTable = () => {
           </Col>
         </Row>
       </Card.Header>
-      <Table
-        responsive
-        className="align-items-center table-flush"
-        style={{ borderRadius: "10px" }}
-      >
-        <thead className="thead-light" style={{ backgroundColor: "#6c757d", color: "white" }}>
+      <Table responsive className="align-items-center table-flush">
+        <thead className="thead-light">
           <tr>
             <th scope="col">Product Name</th>
             <th scope="col">Description</th>

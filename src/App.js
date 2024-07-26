@@ -12,11 +12,14 @@ import { setUser, clearUser } from './ReduxToolkit/userSlice';
 import Home from "./components/Home";
 import Navbar from "./components/Navbar";
 import Overview from "./components/overview/Overview";
+import AdminOverview from "./components/overview/AdminOverview";
 import Login from "./components/Auth/Login/Login";
 import SignUp from "./components/Auth/SignUp/SignUp";
+import { jwtDecode } from 'jwt-decode';
 
 const App = () => {
   const user = useSelector((state) => state.user.user);
+  const token = useSelector(state => state.user.token);
   const dispatch = useDispatch();
 
   function isTokenExpired(token) {
@@ -33,6 +36,17 @@ const App = () => {
     } else {
       console.log("Token has expired"); // Log expired token
       return true;
+    }
+  }
+
+  let isAdmin = false;
+
+  if (token) {
+    try {
+      const decodedToken = jwtDecode(token);
+      isAdmin = decodedToken.is_admin;
+    } catch (error) {
+      console.error('Error decoding token:', error); // Log decoding error
     }
   }
   
@@ -75,6 +89,10 @@ const App = () => {
             <Route
               path="/overview"
               element={user ? <Overview /> : <Navigate replace to="/login" />}
+            />
+             <Route
+              path="/adminoverview"
+              element={isAdmin ? <AdminOverview /> : <Navigate replace to="/overview" />}
             />
           </Routes>
         </Router>

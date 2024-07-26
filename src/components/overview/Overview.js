@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCloudUploadAlt,
@@ -13,6 +13,7 @@ import {
   CircleChartWidget,
   SalesValueWidget,
   SalesValueWidgetPhone,
+  CircleChartWidgetPhone 
 } from "./Widgets";
 import { PageVisitsTable } from "./Tables";
 import { trafficShares } from "../../data/charts";
@@ -20,29 +21,42 @@ import AddProductModal from './AddProductModal';
 import axios from 'axios';
 import { useSelector } from "react-redux";
 
-
 const Overview = () => {
   const [modalShow, setModalShow] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  
 
   const handleModalClose = () => setModalShow(false);
   const handleModalShow = () => setModalShow(true);
   const token = useSelector(state => state.user.token);
 
   const addProduct = async (product) => {
-    console.log('Product to add:', product);
-   
+    console.log('Sending product:', product);  // İstek öncesi log
     try {
-      const response = await axios.post("http://127.0.0.1:5000/product", product, {
+      const response = await axios.post("http://127.0.0.1:5000/product", JSON.stringify(product), {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       });
-      console.log('Product added successfully:', response.data);
+      console.log('Product added successfully:', response.data);  // Başarılı yanıt logu
     } catch (error) {
-      console.error('Error adding product:', error);
+      console.error('Error adding product:', error);  // Hata logu
+      console.error('Error details:', error.response ? error.response.data : 'No response data');
     }
   };
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   return (
     <>
@@ -73,23 +87,11 @@ const Overview = () => {
       <AddProductModal show={modalShow} handleClose={handleModalClose} handleSubmit={addProduct} />
 
       <Row className="justify-content-md-center">
-        <Col xs={12} sm={6} xl={9} className="mb-4 d-none d-sm-block">
-          <SalesValueWidget
-            title="Sales Value"
-            value="10,567"
-            percentage={10.57}
-          />
+        <Col xs={12} lg={6} className="mb-4">
+        {isMobile ? <SalesValueWidgetPhone /> : <SalesValueWidget title="Total Sales Value" />}
         </Col>
-        <Col xs={12} className="mb-4 d-sm-none">
-          <SalesValueWidgetPhone
-            title="Sales Value"
-            value="10,567"
-            percentage={10.57}
-          />
-        </Col>
-
-        <Col xs={12} sm={6} xl={4} className="mb-4">
-          <CircleChartWidget title="My Products" data={trafficShares} />
+        <Col xs={12} lg={6} className="mb-4">
+        {isMobile ? <CircleChartWidgetPhone /> : <CircleChartWidget title="My Products" />}
         </Col>
       </Row>
 

@@ -7,14 +7,15 @@ import {
 import { HamburgerIcon } from '@chakra-ui/icons';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { logoutUser } from '../ReduxToolkit/userSlice'; // Güncel yolu kontrol edin
+import { logoutUser } from '../ReduxToolkit/userSlice';
+import { jwtDecode } from 'jwt-decode';
 
 export const Navbar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = React.useRef();
   const isMobile = useBreakpointValue({ base: true, md: false });
   const user = useSelector(state => state.user.user);
-  console.log(user, "navbar");
+  const token = useSelector(state => state.user.token);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -22,6 +23,17 @@ export const Navbar = () => {
     dispatch(logoutUser());
     navigate('/login');
   };
+
+  let isAdmin = false;
+
+  if (token) {
+    try {
+      const decodedToken = jwtDecode(token);
+      isAdmin = decodedToken.is_admin;
+    } catch (error) {
+      console.error('Error decoding token:', error); // Log decoding error
+    }
+  }
 
   return (
     <Flex
@@ -59,6 +71,9 @@ export const Navbar = () => {
               <Link as={RouterLink} to="/" onClick={onClose}>Home</Link>
               {user && (
                 <Link as={RouterLink} to="/overview" onClick={onClose}>Overview</Link>
+              )}
+              {isAdmin && (
+                <Link as={RouterLink} to="/adminoverview" onClick={onClose}>Admin Overview</Link>
               )}
               {!user && isMobile && (
                 <HStack spacing={4}>

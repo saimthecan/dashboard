@@ -22,7 +22,7 @@ import {
 } from "@chakra-ui/react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setUser  } from "../../../ReduxToolkit/userSlice";
+import { setUser } from "../../../ReduxToolkit/userSlice";
 import { WarningIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import logo from "../logo.png";
 import axios from "axios";
@@ -41,31 +41,35 @@ export const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const user = { username, password };
-    console.log(user, "loginjs");
+    const user = {
+      username: username,
+      password: password
+    };
 
     try {
-      const response = await axios.post("http://localhost:5000/login", user);
+      const response = await axios.post("http://localhost:5000/login", user, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      console.log(response.data); // Yanıtı konsolda yazdır
       if (response.data && response.data.token) {
         console.log("Login successful, token received:", response.data.token);
-        console.log("Login successful, user", response.data); // Log the token
-        // Action Dispatch in Login.js
         dispatch(setUser({
-          username: response.data.username,
+          username: username, // username'i burada manuel ayarlıyoruz
           token: response.data.token
         }));
 
         localStorage.setItem(
           "user",
           JSON.stringify({
-            username: response.data.username, // Burada da `username`'i doğru şekilde kaydedin
+            username: username, // username'i burada manuel ayarlıyoruz
             token: response.data.token,
           })
         );
-        console.log("Token stored in local storage");
         toast({
           title: "Successful login.",
-          description: `Welcome, ${response.data.username}!`,
+          description: `Welcome, ${username}!`,
           status: "success",
           duration: 2000,
           isClosable: true,
@@ -74,7 +78,6 @@ export const Login = () => {
         navigate("/overview");
       } else {
         console.log("No token received");
-        // Hata mesajını göster
         setShowError(true);
         toast({
           title: "Login failed.",
@@ -88,12 +91,9 @@ export const Login = () => {
     } catch (error) {
       console.error("Login error:", error);
       setShowError(true);
-      // API'den gelen hata mesajını kullanarak kullanıcıya bilgi verin
       toast({
         title: "Login failed.",
-        description: error.response
-          ? error.response.data.message
-          : "An error occurred",
+        description: error.response ? error.response.data.detail : "An error occurred",
         status: "error",
         duration: 2000,
         isClosable: true,

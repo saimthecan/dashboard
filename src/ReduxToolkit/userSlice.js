@@ -22,19 +22,25 @@ export const loginUser = createAsyncThunk(
   'user/login',
   async ({ username, password }, { dispatch, rejectWithValue }) => {
     try {
-      const response = await axios.post('http://localhost:5000/login', {
-        username,
-        password,
+      const user = {
+        username: username,
+        password: password
+      };
+
+      const response = await axios.post('http://localhost:5000/login', user, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
       if (response.data && response.data.token) {
         const userData = {
-          username: response.data.username, // doğrudan username bilgisini alıyoruz
+          username: username, // Backend'den username'i alamıyorsak, manuel olarak ekleyelim
           token: response.data.token
         };
         console.log(userData, "userSlice");
         dispatch(setUser(userData));
         localStorage.setItem('user', JSON.stringify(userData));
-        return response.data;
+        return userData;
       } else {
         throw new Error('No user data returned');
       }
@@ -43,7 +49,6 @@ export const loginUser = createAsyncThunk(
     }
   }
 );
-
 
 export const logoutUser = createAsyncThunk(
   'user/logout',
@@ -72,7 +77,7 @@ const userSlice = createSlice({
   },
   reducers: {
     setUser: (state, action) => {
-      state.user = action.payload.username;  // user yerine username kullanıyoruz
+      state.user = action.payload.username;
       state.token = action.payload.token;
     },
     clearUser: (state) => {
