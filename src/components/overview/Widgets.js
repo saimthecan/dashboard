@@ -38,11 +38,12 @@ export const CircleChartWidget = (props) => {
     ],
   };
 
-  const options = {
+ const options = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
-        display: false,
+        position: 'bottom', // Legend'ı alt kısma taşı
       },
     },
   };
@@ -50,25 +51,9 @@ export const CircleChartWidget = (props) => {
   return (
     <Card border="light" className="shadow-sm">
       <Card.Body>
-        <Row className="d-block d-xl-flex align-items-center">
-          <Col
-            xs={12}
-            xl={5}
-            className="text-xl-center d-flex align-items-center justify-content-xl-center mb-3 mb-xl-0"
-          >
-            <Pie data={data} options={options} />
-          </Col>
-          <Col xs={12} xl={7} className="px-xl-0">
-            <div>
-              {products.map((product, index) => (
-                <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '0.5rem' }}>
-                  <span style={{ height: '15px', width: '15px', backgroundColor: colors[index], borderRadius: '50%', marginRight: '10px' }}></span>
-                  {product.name} 
-                </div>
-              ))}
-            </div>
-          </Col>
-        </Row>
+        <div className="d-flex align-items-center justify-content-center" style={{ height: '300px' }}> 
+          <Pie data={data} options={options} />
+        </div>
       </Card.Body>
     </Card>
   );
@@ -108,44 +93,29 @@ export const CircleChartWidgetPhone = (props) => {
 
   const options = {
     responsive: true,
-    maintainAspectRatio: false,
+    maintainAspectRatio: false, // Aspect ratio korumayı devre dışı bırak
     plugins: {
       legend: {
-        display: false,
+        position: 'bottom',
       },
     },
+    layout: {
+      padding: {
+        bottom: 50 // Alt kısımda yeterli boşluk bırak
+      }
+    }
   };
 
   return (
     <Card border="light" className="shadow-sm">
       <Card.Body>
-        <Row className="d-block d-xl-flex align-items-center">
-          <Col
-            xs={12}
-            xl={5}
-            className="text-xl-center d-flex align-items-center justify-content-xl-center mb-3 mb-xl-0"
-            style={{ maxWidth: "100%", height: "auto" }}
-          >
-            <Pie data={data} options={options} />
-          </Col>
-          <Col xs={12} xl={7} className="px-xl-0">
-         
-            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
-              {products.map((product, index) => (
-                <div key={index} style={{ display: 'flex', alignItems: 'center', marginRight: '10px' }}>
-                  <span style={{ height: '15px', width: '15px', backgroundColor: colors[index], borderRadius: '50%', marginRight: '5px' }}></span>
-                  {product.name} 
-                </div>
-              ))}
-            </div>
-          </Col>
-        </Row>
+        <div className="d-flex align-items-center justify-content-center" style={{ height: '300px' }}>
+          <Pie data={data} options={options} />
+        </div>
       </Card.Body>
     </Card>
   );
 };
-
-
 
 export const SalesValueWidget = (props) => {
   const [products, setProducts] = useState([]);

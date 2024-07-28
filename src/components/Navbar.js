@@ -68,7 +68,6 @@ export const Navbar = () => {
           <DrawerHeader>Navigation</DrawerHeader>
           <DrawerBody>
             <VStack spacing={4} align="stretch">
-              <Link as={RouterLink} to="/" onClick={onClose}>Home</Link>
               {user && (
                 <Link as={RouterLink} to="/overview" onClick={onClose}>Overview</Link>
               )}
@@ -92,11 +91,10 @@ export const Navbar = () => {
       <Flex align="center" ml="auto">
         {user ? (
           <Menu>
-            <MenuButton as={Button} rightIcon={<Icon as={HamburgerIcon} />}>
-              <Avatar size="sm" name={user.username} />
+            <MenuButton as={Button}>
+              <Avatar size="sm" name={user[0]} /> {/* Sadece baş harf */}
             </MenuButton>
             <MenuList>
-              <MenuItem as={RouterLink} to="/profile">Profile</MenuItem>
               <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </MenuList>
           </Menu>
