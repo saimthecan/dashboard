@@ -5,7 +5,18 @@ const AddProductModal = ({ show, handleClose, handleSubmit }) => {
   const [product, setProduct] = useState({ name: '', description: '', price: '' });
 
   const handleChange = (e) => {
-    setProduct({ ...product, [e.target.name]: e.target.value });
+    const value = e.target.value;
+    const name = e.target.name;
+
+    // Eğer giriş "name" veya "description" alanlarından biriyse, her kelimenin ilk harfini büyük yap
+    if (name === "name" || name === "description") {
+      const formattedValue = value.split(' ')
+                                 .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                                 .join(' ');
+      setProduct({ ...product, [name]: formattedValue });
+    } else {
+      setProduct({ ...product, [name]: value });
+    }
   };
 
   const submitForm = () => {
